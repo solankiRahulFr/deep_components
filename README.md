@@ -8,4 +8,4 @@
 Feature for next phase - Transfer learning.
 `
 
-Please visit https://deep-components.vercel.app/pytorch[https://deep-components.vercel.app/pytorch] and let me know if you found a mistake or any suggestions for improvement.
+Please visit https://deep-components.vercel.app/pytorch and let me know if you found a mistake or any suggestions for improvement.
