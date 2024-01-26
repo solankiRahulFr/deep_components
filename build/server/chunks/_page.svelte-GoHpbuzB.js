@@ -1195,12 +1195,6 @@ const Code = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     scheduler =${$lr_criterion}`;
   $$result.css.add(css);
   layersCode = $layers;
-  {
-    console.log(layersCode);
-  }
-  {
-    console.log($selectedLayers);
-  }
   forwardLayerName = $selectedLayers.map((l, index) => {
     return `x = ${l.layer.toLowerCase()}_${index}(x)`;
   });
@@ -1386,4 +1380,4 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 });
 
 export { Page as default };
-//# sourceMappingURL=_page.svelte-mkmlycXt.js.map
+//# sourceMappingURL=_page.svelte-GoHpbuzB.js.map
