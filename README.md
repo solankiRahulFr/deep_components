@@ -9,3 +9,5 @@ Feature for next phase - Transfer learning.
 `
 
 Please visit https://deep-components.vercel.app and let me know if you found a mistake or have any suggestions for improvement.
+
+Your feedback is crucial in making this app a valuable resource for learners.
