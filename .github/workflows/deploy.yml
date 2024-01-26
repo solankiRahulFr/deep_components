@@ -29,6 +29,7 @@ jobs:
       - name: build
         env:
           BASE_PATH: '/${{ github.event.repository.name }}'
+          PUBLIC_API_URL : https://solankirahul.pythonanywhere.com/
         run: |
           npm run build
 
