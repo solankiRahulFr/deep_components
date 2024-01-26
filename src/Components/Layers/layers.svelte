@@ -3,19 +3,17 @@
     import SingleLayer from "./../singleLayer/singleLayer.svelte";
     import MdSearch from 'svelte-icons/md/MdSearch.svelte'
     import { onMount } from 'svelte';
-    import { PUBLIC_API_URL } from '$env/static/public';
-    console.log(PUBLIC_API_URL)
+    import { PUBLIC_API_URL, PUBLIC_URL } from '$env/static/public';
     const conicStops = [
 	{ color: 'transparent', start: 0, end: 25 },
 	{ color: 'rgb(var(--color-primary-500))', start: 75, end: 100 }];
     let searchValue = ""
     let layers = []
     let layerShow = []
-
+    console.log(PUBLIC_URL)
     onMount(async ()=>{
-        const resp = await fetch(PUBLIC_API_URL+'pytorch/allLayers')
+        const resp = await fetch(PUBLIC_URL+'pytorch/allLayers')
         layers = await resp.json()
-        console.log(layers, "--------------------------------")
         layerShow = layers
     })
 
