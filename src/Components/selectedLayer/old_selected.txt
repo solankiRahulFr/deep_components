@@ -1,0 +1,148 @@
+<script>
+    import { Accordion, getModalStore, AccordionItem} from '@skeletonlabs/skeleton';
+    import SingleLayer from "./singleLayer.svelte";
+    import MdSearch from 'svelte-icons/md/MdSearch.svelte';
+    import {PUBLIC_API_URL} from "$env/static/public";
+    import { onMount } from 'svelte';
+    import IoIosInformationCircleOutline from 'svelte-icons/io/IoIosInformationCircleOutline.svelte';
+    import Details from './layerDetails/details.svelte';
+    const modalStore = getModalStore();
+    let alloptLayers = ['Adadelta', 'Adagrad', 'Adam', 'AdamW', 'SparseAdam', 'Adamax', 'ASGD', 'SGD', 'RAdam', 'Rprop', 'RMSprop', 'Optimizer', 'NAdam', 'LBFGS']
+    let alllossLayers = ['L1Loss', 'NLLLoss', 'KLDivLoss', 'MSELoss', 'BCELoss', 'BCEWithLogitsLoss', 'NLLLoss2d', 'PoissonNLLLoss', 'CosineEmbeddingLoss', 'CTCLoss', 'HingeEmbeddingLoss', 'MarginRankingLoss', 'MultiLabelMarginLoss', 'MultiLabelSoftMarginLoss', 'MultiMarginLoss', 'SmoothL1Loss', 'GaussianNLLLoss', 'HuberLoss', 'SoftMarginLoss', 'CrossEntropyLoss', 'TripletMarginLoss', 'AdaptiveLogSoftmaxWithLoss', 'TripletMarginWithDistanceLoss']
+    let lossLayers = [];
+    let optLayers = [];
+    let selectedLoss, selectedOpt;
+    let param_loss=[];
+    let param_opt=[];
+
+    onMount(async ()=>{
+        const resp_loss = await fetch(PUBLIC_API_URL+'pytorch/lossLayers')
+        const resp_opt = await fetch(PUBLIC_API_URL+'pytorch/optimizers')
+        lossLayers = await resp_loss.json()
+        optLayers = await resp_opt.json()
+        selectedLoss = lossLayers[0];
+        selectedOpt = optLayers[0];
+        const resp_param_loss = await fetch(PUBLIC_API_URL+`pytorch/loss/${selectedLoss}`)
+        param_loss = await resp_param_loss.json()
+        const resp_param_opt= await fetch(PUBLIC_API_URL+`pytorch/opt/${selectedOpt}`)
+        param_opt = await resp_param_opt.json()
+        console.log(lossLayers)
+        console.log(optLayers)
+    })
+
+
+
+    const onchangeLossLayer = async ()=>{
+        const resp_param_loss = await fetch(PUBLIC_API_URL+`pytorch/loss/${selectedLoss}`)
+        param_loss = await resp_param_loss.json()
+    }
+    const onchangeoptLayer = async ()=>{
+        const resp_param_loss = await fetch(PUBLIC_API_URL+`pytorch/opt/${selectedOpt}`)
+        param_opt = await resp_param_loss.json()
+    }
+   
+</script>
+
+<div>
+    <h4 class="h4">Model</h4>
+    <div class="mt-2 ">
+        <label for="Epoch" class="text-sm mb-1">Number of epoch</label>
+        <input id="Epoch" class="input rounded-md text-xs p-2 mb-4" type="number" placeholder=""/>
+        <div class="card p-2 rounded-md mb-2 variant-ringed">
+        <label for="lossLayer" class="text-sm mb-1 flex justify-start gap-[5px]">Loss functions
+            <!-- <button type="button" class="btn-icon btn-sm btn-icon-sm p-0 m-0 !bg-transparent hover:text-[#f63057] w-[20px] infoButton" ><IoIosInformationCircleOutline/></button> -->
+        </label>
+        <select class="select text-sm rounded-md" id="lossLayer" bind:value={selectedLoss} on:change={onchangeLossLayer}>
+            {#each lossLayers as layer (layer)}
+                <option value={layer}>{layer}</option>
+            {/each}
+        </select>
+        <div class="my-2">
+            <Accordion>
+                <AccordionItem rounded="rounded-md" class="border rounded-md border-zinc-800 w-full">
+                    <svelte:fragment slot="summary">
+                        <div class="flex w-full justify-between">
+                            <h6 class="text-sm">{selectedLoss} parameters</h6> 
+                            <button type="button" class="btn-icon btn-sm btn-icon-sm p-0 m-0 !bg-transparent hover:text-[#f63057] w-[23px] infoButton" on:click|stopPropagation={()=>modalOpen('loss')}><IoIosInformationCircleOutline/></button>
+                        </div>
+                    </svelte:fragment>
+                    <svelte:fragment slot="content">
+                        <div class="flex w-full flex-col p-2">
+                            <Details layer_details={param_loss}/>
+
+                        </div>
+                    </svelte:fragment>    
+                </AccordionItem>
+            </Accordion>
+        </div>
+    </div>
+        <div class="card p-2 rounded-md variant-ringed">
+        <label for="optimizer" class="text-sm mb-1 mt-2 flex justify-start gap-[5px]">Optimizers</label>
+        <select class="select text-sm rounded-md" id="optimizer"  bind:value={selectedOpt} on:change={onchangeoptLayer}>
+            {#each optLayers as layer (layer)}
+                <option value={layer}>{layer}</option>
+            {/each}
+        </select>   
+        <div class='my-2'>
+            <Accordion>
+            <AccordionItem rounded="rounded-md" class="border rounded-md border-zinc-800 w-full">
+                <svelte:fragment slot="summary">
+                    <div class="flex w-full justify-between">
+                        <h6 class="text-sm">{selectedOpt} parameters</h6> 
+                        <button type="button" class="btn-icon btn-sm btn-icon-sm p-0 m-0 !bg-transparent hover:text-[#f63057] w-[23px] infoButton" on:click|stopPropagation={()=>modalOpen('opt')}><IoIosInformationCircleOutline/></button>
+                    </div>
+                </svelte:fragment>
+                <svelte:fragment slot="content">
+                    <div class="flex w-full flex-col p-2">
+                        <Details layer_details={param_opt}/>
+                    </div>
+                </svelte:fragment>    
+            </AccordionItem>
+        </Accordion>
+        </div>
+    </div>
+    </div>
+    <h6 class="h6 mt-2 mb-2">Selected Layers</h6>
+    <Accordion>
+        <SingleLayer isSelected={true}/>
+    </Accordion>
+    
+</div>
+
+
+
+<svelte:head>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+</svelte:head>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // if($alloptLayers.includes(layer)){    
+        //     optFunction.update(value=>{
+        //     if(value[0].changedParam && !value[0].changedParam.includes(name)) value[0].changedParam.push(name)
+        //     if(value[0].changedParam && value[0].changedParam.includes(name) && (e.target.value == "" || !e.target.value)) value[0].changedParam.filter(x=>x!=name)
+        //     // if(!value[0].changedParam) val = {layer:layer, changedParam:[name], parameters:value[0].parameters}
+        //     if(!value[0].changedParam)
+        //         return [{...value[0],changedParam:[name], parameters:value[0].parameters.map(x=>{if(x.name==name) return {...x, default:e.target.value}; else return x})}]
+        //     else{
+        //         return [{...value[0], parameters:value[0].parameters.map(x=>{if(x.name==name) return {...x, default:e.target.value}; else return x})}]
+        //     }
+        //     })
+        // }
