@@ -1,8 +1,6 @@
 <script>
     import { RadioGroup, RadioItem, ConicGradient  } from '@skeletonlabs/skeleton';
     import {selectedLayers, lossFunction, optFunction, alloptLayers, alllossLayers, lrScheduleFunction, allLrSchedulerLayers} from "./../../store/stores";
-    import pkg from 'lodash';
-    const {debounce} = pkg;
     const conicStops = [
 	{ color: 'transparent', start: 0, end: 25 },
 	{ color: 'rgb(var(--color-primary-500))', start: 75, end: 100 }];
