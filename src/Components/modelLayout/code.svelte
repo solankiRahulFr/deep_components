@@ -8,8 +8,6 @@
     $:lrSch=$lrScheduleFunction;
     $:layersCode=$layers;
 
-    $:console.log(layersCode)
-    $:console.log($selectedLayers)
 
 
     $:forwardLayerName = $selectedLayers.map((l, index)=>{

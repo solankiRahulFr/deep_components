@@ -3,7 +3,7 @@
     import IoIosInformationCircleOutline from 'svelte-icons/io/IoIosInformationCircleOutline.svelte';
     import IoMdAdd from 'svelte-icons/io/IoMdAdd.svelte'
     import Details from '../layerDetails/details.svelte';
-    import {PUBLIC_API_URL} from "$env/static/public";
+    import {PUBLIC_URL} from "$env/static/public";
     import {selectedLayers, lossFunction, optFunction, alloptLayers, alllossLayers, lrScheduleFunction, allLrSchedulerLayers} from "./../../store/stores";
     
     const modalStore = getModalStore();
@@ -19,22 +19,26 @@
     
     const handleLayerClick = async (e, layername) =>{
         if(e.detail.open){
-                const resp = await fetch(PUBLIC_API_URL+`pytorch/param/${layername}`)
-                layer_details = await resp.json() 
+                const resp = await fetch(PUBLIC_URL+`pytorch/param/${layername}`)
+                const response = await resp.json()
+                layer_details = response["pytorch"]
         }   
     }
 
     const modalOpen = async (layername) =>{
         let layer_doc;
         if ($alloptLayers.includes(layername)){
-            const resp = await fetch(PUBLIC_API_URL+`pytorch/opt/docs/${layername}`)
-            layer_doc = await resp.json() 
+            const resp = await fetch(PUBLIC_URL+`pytorch/opt/docs/${layername}`)
+            const response = await resp.json()
+            layer_doc = response["pytorch"] 
             }else if($allLrSchedulerLayers.includes(layername)){
-                const resp = await fetch(PUBLIC_API_URL+`pytorch/lr/docs/${layername}`)
-                layer_doc = await resp.json() 
+                const resp = await fetch(PUBLIC_URL+`pytorch/lr/docs/${layername}`)
+                const response = await resp.json()
+                layer_doc =response["pytorch"] 
             }else{
-            const resp = await fetch(PUBLIC_API_URL+`pytorch/docs/${layername}`)
-            layer_doc = await resp.json() }
+            const resp = await fetch(PUBLIC_URL+`pytorch/docs/${layername}`)
+            const response = await resp.json()
+            layer_doc = response["pytorch"] }
             const modal  = {
                         type: 'alert',
                         title: layername,
@@ -75,8 +79,9 @@
             }  
         }
         else{
-            const resp = await fetch(PUBLIC_API_URL+`pytorch/param/${layername}`)
-            let layer_added = await resp.json() 
+            const resp = await fetch(PUBLIC_URL+`pytorch/param/${layername}`)
+            const response = await resp.json()
+            let layer_added = response["pytorch"] 
       
             if($alllossLayers.includes(layername)){
                 if ($lossFunction.length<1) lossFunction.update(value=>[...value, {"layer":layername, "changedParam":false, "parameters":layer_added}]); else alert(`${$lossFunction[0].layer} already added`);
@@ -88,8 +93,9 @@
                 selectedLayers.update(value=>{return [...value, {"layer":layername, "changedParam":false, "parameters":layer_added}]})
             }   
         }
-        const resp = await fetch(PUBLIC_API_URL+`pytorch/param/${layername}`)
-        layer_details = await resp.json() 
+        const resp = await fetch(PUBLIC_URL+`pytorch/param/${layername}`)
+        const response = await resp.json()
+        layer_details = response["pytorch"]
     }
 
 </script>
