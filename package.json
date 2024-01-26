@@ -39,6 +39,7 @@
   "type": "module",
   "dependencies": {
     "clipboardy": "^4.0.0",
+    "dotenv": "^16.4.1",
     "katex": "^0.16.9",
     "lodash": "^4.17.21",
     "mathjax": "^3.2.2",
